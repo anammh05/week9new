@@ -12,14 +12,15 @@ pipeline {
 
 stage('Login & Push to Docker Hub') {
     steps {
-        withCredentials([string(credentialsId: "${DOCKER_HUB_CREDENTIALS}", variable: 'DOCKER_PASS')]) {
+        withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
             bat '''
-            echo %DOCKER_PASS% | docker login -u anammh05 --password-stdin
+            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
             docker push anammh05/registration:v1
             '''
         }
     }
 }
+
 
 
         stage('Deploy to Kubernetes') {
