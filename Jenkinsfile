@@ -12,7 +12,7 @@ pipeline {
 
 stage('Login & Push to Docker Hub') {
     steps {
-        withCredentials([string(credentialsId: 'docker-pass', variable: 'DOCKER_PASS')]) {
+        withCredentials([string(credentialsId: "${DOCKER_HUB_CREDENTIALS}", variable: 'DOCKER_PASS')]) {
             bat '''
             echo %DOCKER_PASS% | docker login -u anammh05 --password-stdin
             docker push anammh05/registration:v1
