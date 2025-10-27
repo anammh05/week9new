@@ -5,23 +5,22 @@ pipeline {
     }
     stages {
         stage('Build Docker Image') {
-            steps {
-                bat 'docker build -t registration:v1 .'
-            }
-        }
+    steps {
+        bat 'docker build -t anammh05/registration:v1 .'
+    }
+}
 
-        stage('Login & Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", 
-                                                 usernameVariable: 'DOCKER_USER', 
-                                                 passwordVariable: 'DOCKER_PASS')]) {
-                    bat """
-                    echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                    docker push registration:v1
-                    """
-                }
-            }
+stage('Login & Push to Docker Hub') {
+    steps {
+        withCredentials([string(credentialsId: 'docker-pass', variable: 'DOCKER_PASS')]) {
+            bat '''
+            echo %DOCKER_PASS% | docker login -u anammh05 --password-stdin
+            docker push anammh05/registration:v1
+            '''
         }
+    }
+}
+
 
         stage('Deploy to Kubernetes') {
             steps {
